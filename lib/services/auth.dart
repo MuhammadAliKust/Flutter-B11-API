@@ -8,23 +8,21 @@ import 'package:http/http.dart' as http;
 class AuthServices {
   ///Register
   Future<RegisterUserModel> registerUser(
-      {required String name,
-      required String email,
+      {required String email,
+      required String name,
       required String password}) async {
     try {
-      http.Response response = await http.post(
-          Uri.parse('{{TODO_URL}}/users/register'),
+      http.Response response = await http.post(Uri.parse('uri'),
           headers: {'Content-Type': 'application/json'},
-          body:
-              jsonEncode({"name": name, "email": email, "password": password}));
+          body: {"name": name, "email": email, "password": password});
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return RegisterUserModel.fromJson(jsonDecode(response.body));
       } else {
-        return RegisterUserModel();
+        throw response.reasonPhrase.toString();
       }
     } catch (e) {
-      rethrow;
+      throw e.toString();
     }
   }
 
@@ -32,55 +30,52 @@ class AuthServices {
   Future<LoginUserModel> loginUser(
       {required String email, required String password}) async {
     try {
-      http.Response response = await http.post(
-          Uri.parse('{{TODO_URL}}/users/login'),
+      http.Response response = await http.post(Uri.parse('uri'),
           headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({"email": email, "password": password}));
+          body: {"email": email, "password": password});
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return LoginUserModel.fromJson(jsonDecode(response.body));
       } else {
-        return LoginUserModel();
+        throw response.reasonPhrase.toString();
       }
     } catch (e) {
-      rethrow;
+      throw e.toString();
     }
   }
 
   ///Get Profile
-
   Future<UserModel> getProfile(String token) async {
     try {
       http.Response response = await http.get(
-          Uri.parse('{{TODO_URL}}/users/login'),
-          headers: {'Authorization': token});
+        Uri.parse('uri'),
+        headers: {'Authorization': token},
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return UserModel.fromJson(jsonDecode(response.body));
       } else {
-        return UserModel();
+        throw response.reasonPhrase.toString();
       }
     } catch (e) {
-      rethrow;
+      throw e.toString();
     }
   }
 
   ///Update Profile
-  Future<bool> updateProfile(
-      {required String token, required String name}) async {
+  Future<bool> updateProfile(String token, String name) async {
     try {
-      http.Response response = await http.put(
-          Uri.parse('{{TODO_URL}}/users/profile'),
-          headers: {'Content-Type': 'application/json', 'Authorization': token},
-          body: jsonEncode({"name": name}));
+      http.Response response = await http.put(Uri.parse('uri'),
+          headers: {'Authorization': token, 'Content-Type': 'application/json'},
+          body: {"name": name});
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
       } else {
-        return false;
+        throw response.reasonPhrase.toString();
       }
     } catch (e) {
-      rethrow;
+      throw e.toString();
     }
   }
 }
