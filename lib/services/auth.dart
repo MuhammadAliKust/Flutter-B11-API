@@ -6,15 +6,19 @@ import 'package:flutter_b11_api/models/user.dart';
 import 'package:http/http.dart' as http;
 
 class AuthServices {
+  String baseUrl = "https://todo-nu-plum-19.vercel.app/";
+
   ///Register
   Future<RegisterUserModel> registerUser(
       {required String email,
       required String name,
       required String password}) async {
     try {
-      http.Response response = await http.post(Uri.parse('uri'),
+      http.Response response = await http.post(
+          Uri.parse('${baseUrl}users/register'),
           headers: {'Content-Type': 'application/json'},
-          body: {"name": name, "email": email, "password": password});
+          body:
+              jsonEncode({"name": name, "email": email, "password": password}));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return RegisterUserModel.fromJson(jsonDecode(response.body));
@@ -30,9 +34,10 @@ class AuthServices {
   Future<LoginUserModel> loginUser(
       {required String email, required String password}) async {
     try {
-      http.Response response = await http.post(Uri.parse('uri'),
+      http.Response response = await http.post(
+          Uri.parse('${baseUrl}users/login'),
           headers: {'Content-Type': 'application/json'},
-          body: {"email": email, "password": password});
+          body: jsonEncode({"email": email, "password": password}));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return LoginUserModel.fromJson(jsonDecode(response.body));
@@ -48,7 +53,7 @@ class AuthServices {
   Future<UserModel> getProfile(String token) async {
     try {
       http.Response response = await http.get(
-        Uri.parse('uri'),
+        Uri.parse("${baseUrl}users/profile"),
         headers: {'Authorization': token},
       );
 
