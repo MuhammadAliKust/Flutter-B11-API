@@ -5,13 +5,15 @@ import 'package:flutter_b11_api/models/task_list.dart';
 import 'package:http/http.dart' as http;
 
 class TaskServices {
+  String baseUrl = "https://todo-nu-plum-19.vercel.app/";
+
   ///Create Task
   Future<TaskModel> createTask(
       {required String token, required String description}) async {
     try {
-      http.Response response = await http.post(Uri.parse('uri'),
+      http.Response response = await http.post(Uri.parse('${baseUrl}todos/add'),
           headers: {'Content-Type': 'application/json', 'Authorization': token},
-          body: {"description": description});
+          body: jsonEncode({"description": description}));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return TaskModel.fromJson(jsonDecode(response.body));
@@ -26,8 +28,8 @@ class TaskServices {
   ///Get All Tasks
   Future<TaskListModel> getAllTask(String token) async {
     try {
-      http.Response response =
-          await http.get(Uri.parse('uri'), headers: {'Authorization': token});
+      http.Response response = await http.get(Uri.parse('${baseUrl}todos/get'),
+          headers: {'Authorization': token});
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return TaskListModel.fromJson(jsonDecode(response.body));
@@ -42,8 +44,9 @@ class TaskServices {
   ///Get Completed Tasks
   Future<TaskListModel> getCompletedTask(String token) async {
     try {
-      http.Response response =
-          await http.get(Uri.parse('uri'), headers: {'Authorization': token});
+      http.Response response = await http.get(
+          Uri.parse('${baseUrl}todos/completed'),
+          headers: {'Authorization': token});
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return TaskListModel.fromJson(jsonDecode(response.body));
@@ -59,7 +62,7 @@ class TaskServices {
   Future<TaskListModel> getInCompletedTask(String token) async {
     try {
       http.Response response =
-          await http.get(Uri.parse('uri'), headers: {'Authorization': token});
+          await http.get(Uri.parse('${baseUrl}todos/incomplete'), headers: {'Authorization': token});
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return TaskListModel.fromJson(jsonDecode(response.body));
