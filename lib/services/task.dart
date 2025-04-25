@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_b11_api/models/task.dart';
 import 'package:flutter_b11_api/models/task_list.dart';
@@ -61,8 +62,9 @@ class TaskServices {
   ///Get InCompleted Tasks
   Future<TaskListModel> getInCompletedTask(String token) async {
     try {
-      http.Response response =
-          await http.get(Uri.parse('${baseUrl}todos/incomplete'), headers: {'Authorization': token});
+      http.Response response = await http.get(
+          Uri.parse('${baseUrl}todos/incomplete'),
+          headers: {'Authorization': token});
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return TaskListModel.fromJson(jsonDecode(response.body));
@@ -76,12 +78,22 @@ class TaskServices {
 
   ///Update Task
   Future<bool> updateTask(
-      {required String token, required String description}) async {
+      {required String token,
+      required String description,
+      required String taskID}) async {
+    log(taskID.toString());
+    log(token.toString());
     try {
-      http.Response response = await http.put(Uri.parse('uri'), headers: {
+      http.Response response = await http
+          .patch(Uri.parse('${baseUrl}todos/update/$taskID'), headers: {
         'Authorization': token,
         'Content-Type': 'application/json'
-      });
+      },
+      body: jsonEncode({
+        'description':description,
+        'complete':false
+      }));
+      log(response.request!.url.toString());
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
@@ -135,8 +147,9 @@ class TaskServices {
   Future<bool> deleteTask(
       {required String token, required String taskID}) async {
     try {
-      http.Response response = await http
-          .delete(Uri.parse('uri/$taskID'), headers: {'Authorization': token});
+      http.Response response = await http.delete(
+          Uri.parse('${baseUrl}todos/delete/$taskID'),
+          headers: {'Authorization': token});
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
