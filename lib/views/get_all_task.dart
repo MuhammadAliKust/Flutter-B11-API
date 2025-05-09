@@ -3,8 +3,10 @@ import 'package:flutter_b11_api/models/task.dart';
 import 'package:flutter_b11_api/provider/user_provider.dart';
 import 'package:flutter_b11_api/services/task.dart';
 import 'package:flutter_b11_api/views/create_task.dart';
+import 'package:flutter_b11_api/views/filter_task.dart';
 import 'package:flutter_b11_api/views/get_completed_task.dart';
 import 'package:flutter_b11_api/views/get_in_completed_task.dart';
+import 'package:flutter_b11_api/views/search_task.dart';
 import 'package:flutter_b11_api/views/update_task.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +50,22 @@ class _GetAllTaskViewState extends State<GetAllTaskView> {
                           builder: (context) => GetCompletedTaskView()));
                 },
                 icon: Icon(Icons.circle)),
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SearchTaskView()));
+                },
+                icon: Icon(Icons.search)),
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FilterTaskView()));
+                },
+                icon: Icon(Icons.filter)),
           ],
         ),
         floatingActionButton: FloatingActionButton(

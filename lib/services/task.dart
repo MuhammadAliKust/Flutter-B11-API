@@ -84,15 +84,10 @@ class TaskServices {
     log(taskID.toString());
     log(token.toString());
     try {
-      http.Response response = await http
-          .patch(Uri.parse('${baseUrl}todos/update/$taskID'), headers: {
-        'Authorization': token,
-        'Content-Type': 'application/json'
-      },
-      body: jsonEncode({
-        'description':description,
-        'complete':false
-      }));
+      http.Response response = await http.patch(
+          Uri.parse('${baseUrl}todos/update/$taskID'),
+          headers: {'Authorization': token, 'Content-Type': 'application/json'},
+          body: jsonEncode({'description': description, 'complete': false}));
       log(response.request!.url.toString());
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -109,8 +104,9 @@ class TaskServices {
   Future<TaskListModel> searchTask(
       {required String token, required String searchKey}) async {
     try {
+      log(searchKey.toString());
       http.Response response = await http.get(
-          Uri.parse('uri?keywords=$searchKey'),
+          Uri.parse('$baseUrl/todos/search?keywords=$searchKey'),
           headers: {'Authorization': token});
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -130,7 +126,7 @@ class TaskServices {
       required String lastDate}) async {
     try {
       http.Response response = await http.get(
-          Uri.parse('uri?startDate=$firstDate&endDate=$lastDate'),
+          Uri.parse('$baseUrl/todos/search?startDate=$firstDate&endDate=$lastDate'),
           headers: {'Authorization': token});
 
       if (response.statusCode == 200 || response.statusCode == 201) {
